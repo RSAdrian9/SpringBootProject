@@ -6,6 +6,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -41,4 +43,11 @@ public class Rooms {
     @Column(name = "availableRoom")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String availableRoom;
+
+
+    // Una habitación puede ser reservada por uno o muchos usuarios
+
+    @OneToMany(mappedBy = "rooms", orphanRemoval = true)
+    private Set<Reservations> reservationses = new LinkedHashSet<>();
+
 }

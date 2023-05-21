@@ -5,7 +5,9 @@ import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,9 +16,9 @@ public class Reservations {
 
     // id, habitacion, cliente, fechaLlegada, fechaSalida, precioTotal, estado
 
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int Id;
+    private int id;
 
     @Column(name = "numberRoom")
     @JdbcTypeCode(SqlTypes.INTEGER)
@@ -39,8 +41,17 @@ public class Reservations {
     private double priceTotal;
 
     @Column(name = "state")
-    @JdbcTypeCode(SqlTypes.LONG32NVARCHAR)
+    @JdbcTypeCode(SqlTypes.LONGNVARCHAR)
     private String state;
 
+    @ManyToMany
+    @JoinTable(
+            name = "reservation_rooms",
+            joinColumns = @JoinColumn(name = "reservation_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_id")
+    )
+    private List<Rooms> reservationses = new ArrayList<>();
+
+    // Una reserva pertenece a una habitación
 
 }
