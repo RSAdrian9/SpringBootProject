@@ -2,8 +2,9 @@ package com.Proyect.SpringBoot.Controllers;
 
 import com.Proyect.SpringBoot.Models.Reservations;
 import com.Proyect.SpringBoot.Models.Rooms;
-import com.Proyect.SpringBoot.Services.InterfacesReservation;
-import com.Proyect.SpringBoot.Services.InterfacesRoom;
+import com.Proyect.SpringBoot.Services.InterfaceReservation;
+import com.Proyect.SpringBoot.Services.InterfaceRoom;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,109 +16,116 @@ import java.util.Optional;
 
 @Controller
 public class ControllerHotel {
-    private final InterfacesReservation reservationService;
-    private final InterfacesRoom roomService;
 
-    public ControllerHotel(InterfacesReservation reservationService, InterfacesRoom roomService) {
-        this.reservationService = reservationService;
-        this.roomService = roomService;
+    @Autowired
+    private InterfaceReservation ReservationService;
+
+    @Autowired
+    private InterfaceRoom RoomService;
+
+    public ControllerHotel(InterfaceReservation ReservationService, InterfaceRoom RoomService) {
+        this.ReservationService = ReservationService;
+        this.RoomService = RoomService;
     }
 
-    @GetMapping("/Home")
-    public String home(Model model) {
-        List<Reservations> reservations = reservationService.findAll();
-        List<Rooms> rooms = roomService.findAll();
+    @GetMapping("/hotel")
+    public String hotel(Model model) {
+        List<Reservations> reservations = ReservationService.findAll();
+        List<Rooms> rooms = RoomService.findAll();
         model.addAttribute("reservations", reservations);
         model.addAttribute("rooms", rooms);
-        return "home";
+        return "hotel";
     }
 
     @PostMapping("/agregar-reserva")
     public String agregarReserva(
-            @RequestParam("arrival_date") String arrivalDate,
-            @RequestParam("departure_date") String departureDate,
-            @RequestParam("name_customer") String nameCustomer,
-            @RequestParam("number_room") int numberRoom,
-            @RequestParam("price_total") double priceTotal,
+            @RequestParam("arrivalDate") String arrivalDate,
+            @RequestParam("departureDate") String departureDate,
+            @RequestParam("nameCustomer") String nameCustomer,
+            @RequestParam("numberRoomReservation") int numberRoomReservation,
+            @RequestParam("priceTotal") double priceTotal,
             @RequestParam("state") String state
     ) {
-        reservationService.insertReservation(arrivalDate, departureDate, nameCustomer, numberRoom, priceTotal, state);
-        return "redirect:/Home";
+        ReservationService.insertReservation(arrivalDate, departureDate, nameCustomer, numberRoomReservation, priceTotal, state);
+        return "redirect:/hotel";
     }
 
     @PostMapping("/agregar-habitacion")
     public String agregarHabitacion(
-            @RequestParam("available_room") String availableRoom,
+            @RequestParam("availableRoom") String availableRoom,
             @RequestParam("description") String description,
             @RequestParam("name") String name,
-            @RequestParam("number_room") int numberRoom,
-            @RequestParam("price_room") double priceRoom,
-            @RequestParam("type_room") String typeRoom
+            @RequestParam("numberRoom") int numberRoom,
+            @RequestParam("priceRoom") double priceRoom,
+            @RequestParam("typeRoom") String typeRoom
     ) {
-        roomService.insertRoom(availableRoom, description, name, numberRoom, priceRoom, typeRoom);
-        return "redirect:/Home";
+        RoomService.insertRoom(availableRoom, description, name, numberRoom, priceRoom, typeRoom);
+        return "redirect:/hotel";
     }
 
 
     @PostMapping("/asociar-habitaciones")
     public String asociarHabitaciones(
-            @RequestParam("reserva_id") long reservaId,
-            @RequestParam("habitaciones") List<Long> habitacionesIds
+            @RequestParam("reservaId") int reservaId,
+            @RequestParam("habitacionesIds") List<Integer> habitacionesIds
     ) {
         // Obtener la reserva por su ID
-        Optional<Reservations> reservaOptional = reservationService.findReservationById(reservaId);
+        Optional<Reservations> reservaOptional = ReservationService.findReservationById((int) reservaId);
         if (reservaOptional.isPresent()) {
             Reservations reserva = reservaOptional.get();
 
             // Obtener las habitaciones seleccionadas por sus IDs
-            List<Rooms> habitacionesSeleccionadas = roomService.findAllById(habitacionesIds);
+            List<Rooms> habitacionesSeleccionadas = RoomService.findAllById(habitacionesIds);
 
+            /*
             // Asociar las habitaciones a la reserva
             reserva.setRooms(new LinkedHashSet<>(habitacionesSeleccionadas));
-            reservationService.save(reserva);
+            ReservationService.save(reserva);
+
+             */
         }
 
-        return "redirect:/Home";
+        return "redirect:/hotel";
     }
 
     @PostMapping("/borrar-reserva")
     public String borrarReserva(@RequestParam("reservaBorrar") int id) {
-        reservationService.deleteReservation(id);
-        return "redirect:/Home";
+        ReservationService.deleteReservation(id);
+        return "redirect:/hotel";
     }
 
     @PostMapping("/borrar-habitacion")
-    public String borrarHabitacion(@RequestParam("habitacionBorrar") long id) {
-        roomService.deleteRoom(id);
-        return "redirect:/Home";
+    public String borrarHabitacion(@RequestParam("habitacionBorrar") int id) {
+        RoomService.deleteRoom(id);
+        return "redirect:/hotel";
     }
 
     @PostMapping("/actualizar-reserva")
     public String actualizarReserva(
             @RequestParam("reservaActualizar") int id,
-            @RequestParam("arrival_date") String arrivalDate,
-            @RequestParam("departure_date") String departureDate,
-            @RequestParam("name_customer") String nameCustomer,
-            @RequestParam("number_room") int numberRoom,
-            @RequestParam("price_total") double priceTotal,
+            @RequestParam("arrivalDate") String arrivalDate,
+            @RequestParam("departureDate") String departureDate,
+            @RequestParam("nameCustomer") String nameCustomer,
+            @RequestParam("numberRoom") int numberRoom,
+            @RequestParam("priceTotal") double priceTotal,
             @RequestParam("state") String state
     ) {
-        reservationService.editReservation(id, arrivalDate, departureDate, nameCustomer, numberRoom, priceTotal, state);
-        return "redirect:/Home";
+        ReservationService.editReservation(id, arrivalDate, departureDate, nameCustomer, numberRoom, priceTotal, state);
+        return "redirect:/hotel";
     }
 
     @PostMapping("/actualizar-habitacion")
     public String actualizarHabitacion(
             @RequestParam("habitacionActualizar") long id,
-            @RequestParam("available_room") String availableRoom,
+            @RequestParam("availableRoom") String availableRoom,
             @RequestParam("description") String description,
             @RequestParam("name") String name,
-            @RequestParam("number_room") int numberRoom,
-            @RequestParam("price_room") double priceRoom,
-            @RequestParam("type_room") String typeRoom
+            @RequestParam("numberRoom") int numberRoom,
+            @RequestParam("priceRoom") double priceRoom,
+            @RequestParam("typeRoom") String typeRoom
     ) {
-        roomService.editRoom(id, availableRoom, description, name, numberRoom, priceRoom, typeRoom);
-        return "redirect:/Home";
+        RoomService.editRoom(id, availableRoom, description, name, numberRoom, priceRoom, typeRoom);
+        return "redirect:/hotel";
     }
 }
 

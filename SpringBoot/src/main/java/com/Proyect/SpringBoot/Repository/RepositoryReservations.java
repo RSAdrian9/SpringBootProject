@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface RepositoryReservations extends JpaRepository<Reservations, Long> {
+public interface RepositoryReservations extends JpaRepository<Reservations, Integer> {
     @Query(value="SELECT * FROM Reservations", nativeQuery = true)
     public List<Reservations> findAll();
 
@@ -31,5 +31,5 @@ public interface RepositoryReservations extends JpaRepository<Reservations, Long
     @Query(value = "INSERT INTO Reservations (name_customer, number_room) VALUES (:name_customer, :number_room)", nativeQuery = true)
     void insertReservation(@Param("name_customer") String name_customer, @Param("number_room") Integer number_room);
 
-    Optional<Reservations> findReservationById(Long id);
+    Optional<Reservations> findReservationById(int id);
 }

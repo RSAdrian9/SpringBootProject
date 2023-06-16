@@ -5,9 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Entity
@@ -44,14 +42,9 @@ public class Reservations {
     @JdbcTypeCode(SqlTypes.LONGNVARCHAR)
     private String state;
 
-    @ManyToMany
-    @JoinTable(
-            name = "reservation_rooms",
-            joinColumns = @JoinColumn(name = "reservation_id"),
-            inverseJoinColumns = @JoinColumn(name = "room_id")
-    )
-    private List<Rooms> reservationses = new ArrayList<>();
+    @OneToMany(mappedBy = "reservations", orphanRemoval = true)
+    private Set<Rooms> roomses = new LinkedHashSet<>();
 
-    // Una reserva pertenece a una habitación
+// Una reserva pertenece a una habitación
 
 }

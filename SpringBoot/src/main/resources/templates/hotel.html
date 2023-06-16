@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Ruiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h2>HOTEL RUIZ</h2>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-6">
+            <h2>Tabla de Reservas</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nº habitación</th>
+                    <th>Nombre cliente</th>
+                    <th>Fecha llegada</th>
+                    <th>Fecha salida</th>
+                    <th>Precio total</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reserva : ${reservas}">
+                    <td th:text="${reserva.id}"></td>
+                    <td th:text="${reserva.numberRoom}"></td>
+                    <td th:text="${reserva.nameCustomer}"></td>
+                    <td th:text="${reserva.arrivalDate}"></td>
+                    <td th:text="${reserva.departureDate}"></td>
+                    <td th:text="${reserva.priceTotal}"></td>
+                    <td th:text="${reserva.state}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-6">
+            <h2>Tabla de Habitaciones</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Nº habitación</th>
+                    <th>Tipo habitación</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th>Habitación disponible</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="habitacion : ${habitaciones}">
+                    <td th:text="${habitacion.Id}"></td>
+                    <td th:text="${habitacion.name}"></td>
+                    <td th:text="${habitacion.numberRoom}"></td>
+                    <td th:text="${habitacion.typeRoom}"></td>
+                    <td th:text="${habitacion.priceRoom}"></td>
+                    <td th:text="${habitacion.description}"></td>
+                    <td th:text="${habitacion.availableRoom}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <div class="column">
+                <form action="/agregar-reserva" method="post">
+                    <h2>Añadir Reserva</h2>
+
+                    <label for="arrivalDate">Fecha de llegada:</label>
+                    <input type="text" name="arrivalDate" id="arrivalDate" required>
+
+                    <label for="departureDate">Fecha de salida:</label>
+                    <input type="text" name="departureDate" id="departureDate" required>
+
+                    <label for="nameCustomer">Nombre Cliente:</label>
+                    <input type="text" name="nameCustomer" id="nameCustomer" required>
+
+                    <label for="numberRoomReservation">Nº habitación:</label>
+                    <input type="text" name="numberRoomReservation" id="numberRoomReservation" required>
+
+                    <label for="priceTotal">Precio:</label>
+                    <input type="text" name="priceTotal" id="priceTotal" required>
+
+                    <label for="state">Estado:</label>
+                    <input type="text" name="state" id="state" required>
+
+                    <button type="submit">Añadir Reserva</button>
+                </form>
+
+                <form action="/agregar-habitacion" method="post">
+                    <h2>Añadir Habitación</h2>
+
+                    <label for="availableRoom">Habitación disponible:</label>
+                    <input type="text" name="availableRoom" id="availableRoom" required>
+
+                    <label for="description">Descripción:</label>
+                    <input type="number" name="description" id="description" required>
+
+                    <label for="name">Nombre cliente:</label>
+                    <input type="text" name="name" id="name" required>
+
+                    <label for="numberRoom">Nº habitación:</label>
+                    <input type="number" name="numberRoom" id="numberRoom" required>
+
+                    <label for="priceRoom">Precio:</label>
+                    <input type="text" name="priceRoom" id="priceRoom" required>
+
+                    <label for="typeRoom">Tipo habitación:</label>
+                    <input type="number" name="typeRoom" id="typeRoom" required>
+
+                    <button type="submit">Añadir Habitación</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="column">
+                <form action="/borrar-reserva" method="post">
+                    <h2>Borrar Reserva</h2>
+                    <label for="reservaBorrar">Reserva:</label>
+                    <select name="reservaBorrar" id="reservaBorrar">
+                        <option value="">Seleccione una reserva</option>
+                        <option th:each="reserva : ${reservas}" th:value="${reserva.id}" th:text="${reserva.nombre}"></option>
+                    </select>
+                    <button type="submit">Borrar Reserva</button>
+                </form>
+
+                <form action="/borrar-habitacion" method="post">
+                    <h2>Borrar Habitación</h2>
+                    <label for="habitacionBorrar">Habitación:</label>
+                    <select name="habitacionBorrar" id="habitacionBorrar">
+                        <option value="">Seleccione una habitación</option>
+                        <option th:each="habitacion : ${habitaciones}" th:value="${habitacion.id}" th:text="${habitacion.nombre}"></option>
+                    </select>
+                    <button type="submit">Borrar Habitación</button>
+                </form>
+
+                <form action="/asociar-habitaciones" method="post">
+                    <h2>Asociar Habitaciones a Reservas</h2>
+                    <label for="reservaId">Reserva:</label>
+                    <select name="reservaId" id="reservaId">
+                        <option value="">Seleccione una reserva</option>
+                        <option th:each="reserva : ${reservas}" th:value="${reserva.id}" th:text="${reserva.nombre}"></option>
+                    </select>
+
+                    <label for="habitacionesIds">Habitacion:</label>
+                    <select name="habitacionesIds" id="habitacionesIds" multiple>
+                        <option value="">Seleccione habitacion/es</option>
+                        <option th:each="habitacion : ${habitaciones}" th:value="${habitacion.id}" th:text="${habitacion.nombre}"></option>
+                    </select>
+
+                    <button type="submit">Asociar habitaciones</button>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="column">
+                <!-- Formulario para actualizar cliente -->
+                <form action="/actualizar-reserva" method="post">
+                    <h2>Actualizar Reserva</h2>
+                    <label for="reservaActualizar">Reserva:</label>
+                    <select name="reservaActualizar" id="reservaActualizar">
+                        <option value="">Seleccione una reserva</option>
+                        <option th:each="cliente : ${clientes}" th:value="${cliente.id}" th:text="${cliente.nombre}"></option>
+                    </select>
+                    <label for="nombreClienteActualizar">Nombre:</label>
+                    <input type="text" name="nombreClienteActualizar" id="nombreClienteActualizar" required>
+                    <label for="telefonoClienteActualizar">Teléfono:</label>
+                    <input type="text" name="telefonoClienteActualizar" id="telefonoClienteActualizar" required>
+                    <button type="submit">Actualizar Reserva</button>
+                </form>
+
+                <!-- Formulario para actualizar plato -->
+                <form action="/actualizar-plato" method="post">
+                    <h2>Actualizar Habitación</h2>
+                    <label for="platoActualizar">Plato:</label>
+                    <select name="platoActualizar" id="platoActualizar">
+                        <option value="">Seleccione una habitacion</option>
+                        <option th:each="habitaciones : ${rooms}" th:value="${rooms.id}" th:text="${rooms.nombre}"></option>
+                    </select>
+                    <label for="nombrePlatoActualizar">Nombre:</label>
+                    <input type="text" name="nombrePlatoActualizar" id="nombrePlatoActualizar" required>
+                    <label for="precioPlatoActualizar">Precio:</label>
+                    <input type="number" name="precioPlatoActualizar" id="precioPlatoActualizar" required>
+                    <button type="submit">Actualizar Habitación</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

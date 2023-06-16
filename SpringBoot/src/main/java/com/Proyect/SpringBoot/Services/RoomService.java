@@ -1,11 +1,13 @@
 package com.Proyect.SpringBoot.Services;
 
 import com.Proyect.SpringBoot.Models.Rooms;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-public class RoomService implements InterfacesRoom{
+@Service
+public class RoomService implements InterfaceRoom {
     @Override
     public void save(Rooms rooms) {
 
@@ -37,7 +39,7 @@ public class RoomService implements InterfacesRoom{
     }
 
     @Override
-    public List<Rooms> findAllById(List<Long> ids) {
+    public List<Rooms> findAllById(List<Integer> ids) {
         return null;
     }
 }

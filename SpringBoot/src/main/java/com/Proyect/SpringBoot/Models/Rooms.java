@@ -44,10 +44,13 @@ public class Rooms {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private String availableRoom;
 
+    @ManyToOne
+    @JoinColumn(name = "reservations_id")
+    private Reservations reservations;
+
 
     // Una habitación puede ser reservada por uno o muchos usuarios
 
-    @OneToMany(mappedBy = "rooms", orphanRemoval = true)
-    private Set<Reservations> reservationses = new LinkedHashSet<>();
+
 
 }

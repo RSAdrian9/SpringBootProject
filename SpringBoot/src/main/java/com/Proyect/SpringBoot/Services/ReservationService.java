@@ -2,13 +2,17 @@ package com.Proyect.SpringBoot.Services;
 
 import com.Proyect.SpringBoot.Models.Reservations;
 import com.Proyect.SpringBoot.Repository.RepositoryReservations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ReservationService implements InterfacesReservation {
+@Service
+public class ReservationService implements InterfaceReservation {
 
-    private final RepositoryReservations reservationRepository;
+    @Autowired
+    private RepositoryReservations reservationRepository;
 
     public ReservationService(RepositoryReservations reservationRepository) {
         this.reservationRepository = reservationRepository;
@@ -16,11 +20,13 @@ public class ReservationService implements InterfacesReservation {
 
     @Override
     public void save(Reservations reservations) {
+
         reservationRepository.save(reservations);
     }
 
     @Override
     public List<Reservations> findAll() {
+
         return reservationRepository.findAll();
     }
 
@@ -67,7 +73,8 @@ public class ReservationService implements InterfacesReservation {
     }
 
     @Override
-    public Optional<Reservations> findReservationById(long id) {
+    public Optional<Reservations> findReservationById(int id) {
+        // Lógica para buscar una reserva por su ID
         return reservationRepository.findById(id);
     }
 }
